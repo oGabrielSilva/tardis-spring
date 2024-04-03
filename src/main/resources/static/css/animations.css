@@ -1,0 +1,18 @@
+.animated-by-shake {
+  animation: kf-shake 100ms ease-in-out infinite;
+}
+
+@keyframes kf-shake {
+  from {
+    transform: translateX(-10px);
+  }
+  to {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes kf-bar {
+  to {
+    transform: translateX(calc(100vw + 100%));
+  }
+}

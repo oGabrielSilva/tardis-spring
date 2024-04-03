@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <th:block th:replace="~{includes/head.html}"></th:block>
+  <link rel="stylesheet" href="/public/css/session.css">
+  <title>Tardis - Faça seu login</title>
+</head>
+
+<body>
+
+  <div>
+    <main>
+      <form data-generic="Oopss... algum erro inesperado ocorreu" data-success="Bem-vindo, #!" id="session"
+        action="/api/authentication/session">
+        <div class="session-top">
+          <h1>Tardis</h1>
+          <h3>Faça seu login</h3>
+          <p>Entre para explorar um universo de conhecimento. Teste sua mente ou crie desafios para seus amigos.</p>
+        </div>
+        <div class="session-inputs">
+          <div class="session-input">
+            <label for="email">Email</label>
+            <input maxlength="150" class="primary" data-message="Email não foi considerado válido" type="email"
+              name="email" id="email" placeholder="noble@tardis.com">
+          </div>
+          <div class="session-input">
+            <label for="password">Senha</label>
+            <input maxlength="200" class="primary"
+              data-message="Senha não foi considerada válida. Mínimo de 8 caracteres" type="password" name="password"
+              id="password" placeholder="Mínimo de 8 caracteres">
+          </div>
+        </div>
+        <div class="forgot-password">
+          <a href="/forgot-password" target="_blank" rel="noopener noreferrer">Esqueceu a senha?</a>
+        </div>
+        <div class="session-buttons">
+          <button id="session-submit" class="primary" type="submit">Entrar</button>
+          <button type="button" id="session-sign-up">Cadastrar</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <input type="hidden" id="www-manager-id" value="session">
+
+</body>
+
+</html>

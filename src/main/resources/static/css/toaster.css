@@ -1,0 +1,32 @@
+#toaster {
+  position: fixed;
+  top: 5vh;
+  right: 5vw;
+  background: var(--danger);
+  z-index: 9999;
+  max-width: 80vw;
+  min-width: 40vw;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+#toaster .content {
+  padding: 1rem 1rem calc(1rem - 4px) 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+#toaster .progress {
+  border: 2px solid var(--toaster-progress-color);
+}
+
+#toaster i,
+#toaster span {
+  color: var(--text-on-danger);
+  font-weight: 500;
+}
+
+#toaster i {
+  font-size: 1.2rem;
+}

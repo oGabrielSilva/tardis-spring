@@ -1,0 +1,10 @@
+.go-session i,
+.go-session {
+  transition: all 200ms ease-in-out;
+  color: var(--text);
+}
+
+.go-session:hover,
+.go-session:hover * {
+  color: var(--title);
+}

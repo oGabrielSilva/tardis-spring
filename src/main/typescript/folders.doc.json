@@ -1,0 +1,10 @@
+{
+  "api": "Manipulação dos dados através da rede",
+  "data": {
+    "dto": "Pasta para armazenar arquivos de transferência de dados, como email e senha",
+    "entities": "Pasta para armazenar arquivos de entidades, como os models"
+  },
+  "manager": "Pasta de armazenamento dos gerenciadores de tela. Arquivo de gerenciamento da página home, por exemplo.",
+  "tools": "Ferramentas para a manipulação de interações únicas",
+  "utils": "Funções isoladas que não necessitam de uma estrutura de classes"
+}

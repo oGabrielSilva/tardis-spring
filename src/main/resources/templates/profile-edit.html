@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <th:block th:replace="~{includes/head.html}"></th:block>
+  <title th:text="${user.name} + ' - Edite seu perfil'"></title>
+  <link rel="stylesheet" href="/public/css/profile.css">
+</head>
+
+<body>
+  <div>
+    <th:block th:replace="~{includes/header-default.html}"></th:block>
+    <main id="main-edit-profile">
+      <form id="edit-profile">
+        <div>
+          <h1>Olá, <span th:text="${user.name}"></span></h1>
+          <h3>Edite seu perfil</h3>
+        </div>
+        <div class="inputs">
+          <div class="form-input">
+            <img class="avatar" th:src="${user.avatarURL} ?: '/public/svg/avatar.svg'" alt="Avatar" width="62"
+              height="62">
+            <input data-message="Oopss... você precisa selecionar uma imagem" type="file" class="dn" name="avatar"
+              id="avatar-input" accept=".png, .PNG, .jpg, .JPG, .jpeg, .JPEG, .webp">
+          </div>
+
+          <div class="form-input">
+            <label for="username">Username</label>
+            <input th:value="${user.username}" maxlength="150" class="primary" data-message="Username precisa ser único"
+              type="text" name="username" id="username" placeholder="oNoble">
+          </div>
+
+          <div class="form-input">
+            <label for="name">Nome</label>
+            <input th:value="${user.name}" maxlength="150" class="primary"
+              data-message="Seu nome precisa conter pelo menos 2 caracteres" type="text" name="name" id="name"
+              placeholder="John Doe">
+          </div>
+
+          <div class="form-input">
+            <label for="email">Email</label>
+            <input th:value="${user.email}" maxlength="150" class="primary"
+              data-message="Email não foi considerado válido" type="email" name="email" id="email"
+              placeholder="noble@tardis.com">
+          </div>
+        </div>
+        <div>
+          <button type="submit" class="primary">Salvar alterações</button>
+        </div>
+      </form>
+    </main>
+  </div>
+  <input type="hidden" id="www-manager-id" value="profile">
+</body>
+
+</html>

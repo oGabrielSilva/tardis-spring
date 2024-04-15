@@ -1,18 +1,17 @@
-import type { JsonRestApi } from '@App/api/JsonRestApi';
+import { JsonRestApi } from '@App/api/JsonRestApi';
 import type { ExceptionDto } from '@App/data/dto/ExceptionDto';
 import type { SessionDto } from '@App/data/dto/SessionDto';
 import { UserValidation } from '@App/data/validation/UserValidation';
-import type { AnimationTool as Anim } from '@App/tools/AnimationTool';
-import type { ScreenProgressTool } from '@App/tools/ScreenProgressTool';
-import type { ToasterTool } from '@App/tools/ToasterTool';
+import { AnimationTool } from '@App/tools/AnimationTool';
+import { ScreenProgressTool } from '@App/tools/ScreenProgressTool';
+import { ToasterTool } from '@App/tools/ToasterTool';
 
-export function runAuthenticationManager(
-  form: HTMLFormElement,
-  anim: Anim,
-  toaster: ToasterTool,
-  progress: ScreenProgressTool,
-  rest: JsonRestApi,
-) {
+const anim = AnimationTool.get();
+const toaster = ToasterTool.get();
+const progress = ScreenProgressTool.get();
+const rest = JsonRestApi.get();
+
+export function runAuthenticationManager(form: HTMLFormElement) {
   let path = '';
   const genericError = form.dataset.generic ? form.dataset.generic : 'Oopss...';
   const successMessage = form.dataset.success ? form.dataset.success : '#';
@@ -24,6 +23,10 @@ export function runAuthenticationManager(
   const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
   const signUpButton = form.querySelector('#session-sign-up') as HTMLButtonElement;
   const submit = document.createElement('button');
+
+  if (new URLSearchParams(location.search).get('clear') === 'true') {
+    toaster.danger(form.dataset.forbidden ?? '');
+  }
 
   emailInput.addEventListener('input', () => {
     emailInput.dataset.error = String(!validation.isEmailValid(emailInput.value.trim()));
@@ -77,7 +80,10 @@ export function runAuthenticationManager(
         return;
       }
       toaster
-        .addAfterFunction(() => (location.href = '/'))
+        .addAfterFunction(() => {
+          if (new URLSearchParams(location.search).get('clear') === 'true') window.close();
+          else window.location.href = '/';
+        })
         .success(successMessage.replace('#', json.user.username));
     } catch (error) {
       console.log(error);

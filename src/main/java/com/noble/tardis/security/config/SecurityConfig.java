@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.noble.tardis.security.enums.UserRole;
+import com.noble.tardis.security.filters.AuthenticationRedirectFilter;
 import com.noble.tardis.security.filters.SecurityFilter;
 
 @Configuration
@@ -21,6 +22,8 @@ import com.noble.tardis.security.filters.SecurityFilter;
 public class SecurityConfig {
     @Autowired
     SecurityFilter securityFilter;
+    @Autowired
+    AuthenticationRedirectFilter authenticationRedirectFilter;
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -37,15 +40,14 @@ public class SecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
-                        request -> request.requestMatchers("/api/*")
-                                .hasRole(UserRole.COMMON.asString())
-                                .requestMatchers("/api/authentication/sign-up", "/api/authentication/session")
+                        request -> request.requestMatchers("/api/authentication/sign-up", "/api/authentication/session")
                                 .permitAll()
-                                .requestMatchers("/wwwroot/*")
+                                .requestMatchers("/api/**").hasRole(UserRole.COMMON.asString())
+                                .requestMatchers("/wwwroot/**")
                                 .hasAnyRole(UserRole.ADMIN.asString(), UserRole.ROOT.asString())
                                 .anyRequest().permitAll())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                // .addFilterAfter(authenticationRedirectFilter, SecurityFilter.class)
+                .addFilterAfter(authenticationRedirectFilter, SecurityFilter.class)
                 .build();
     }
 }

@@ -3,13 +3,67 @@
 
 <head>
   <th:block th:replace="~{includes/head.html}"></th:block>
+  <link rel="stylesheet" href="/public/css/home.css">
   <title>Tardis - Ascenda nos rankings</title>
 </head>
 
 <body>
   <div>
     <th:block th:replace="~{includes/header-default.html}"></th:block>
-    <section></section>
+    <div class="content-container">
+      <section class="content">
+        <div class="content-link">
+          <a href="/quizzes">
+            <h2><span>Meus quizzes</span></h2>
+          </a>
+          <a href="/quizzes">Ver mais...</a>
+        </div>
+        <th:block th:if="${quizzes != null}">
+          <div class="quizzes">
+            <th:block th:each="quiz : ${quizzes}">
+              <a class="quiz-container" th:href="${'/q/' + quiz.slug}">
+                <div class="quiz">
+                  <img class="quiz-img" th:src="${quiz.imageURL}" th:alt="${quiz.title}">
+                  <div class="quiz-content">
+                    <div>
+                      <h2 class="title" th:text="${quiz.title}"></h2>
+                      <p class="quiz-description" th:text="${quiz.description}"></p>
+                    </div>
+                    <div class="logs">
+                      <div>
+                        <strong>Jogado: </strong> <span>10</span> vezes
+                      </div>
+                      <div>
+                        <span>5 perguntas</span>
+                      </div>
+                    </div>
+                    <div class="quiz-bottom">
+                      <div class="info-container">
+                        <img th:src="${quiz.owner.avatarURL}" class="avatar" width="36" height="36"
+                          th:alt="${quiz.owner.name}">
+                        <div class="info">
+                          <small><span th:text="${quiz.owner.username}"></span></small>
+                          <span th:text="${quiz.owner.name}"></span>
+                        </div>
+                      </div>
+                      <div class="quiz-play">
+                        <i class="bi bi-play"></i>
+                        <span>Jogar</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </th:block>
+          </div>
+        </th:block>
+        <th:block th:unless="${quizzes != null}">
+          <div class="quizzes">
+            <div>Nenhum quiz criado por você</div>
+          </div>
+        </th:block>
+      </section>
+    </div>
   </div>
   <input type="hidden" id="www-manager-id" value="home">
 </body>

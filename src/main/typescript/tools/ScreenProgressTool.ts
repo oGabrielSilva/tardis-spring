@@ -1,6 +1,8 @@
 import { generateHTML } from '@App/utils/generateHTML';
 
 export class ScreenProgressTool {
+  private static tool: ScreenProgressTool;
+
   private readonly screenProgressID = 'progress-view-container';
   private readonly barClassName = 'bar';
   private readonly bar2ClassName = 'bar2';
@@ -15,6 +17,8 @@ export class ScreenProgressTool {
 
   private isVisible = false;
 
+  private constructor() {}
+
   public show() {
     if (this.isVisible) return;
     this.isVisible = true;
@@ -24,5 +28,16 @@ export class ScreenProgressTool {
   public hide() {
     this.isVisible = false;
     this.view.remove();
+  }
+
+  public onScreen() {
+    return this.isVisible;
+  }
+
+  public static get() {
+    if (!ScreenProgressTool.tool) {
+      ScreenProgressTool.tool = new ScreenProgressTool();
+    }
+    return ScreenProgressTool.tool;
   }
 }

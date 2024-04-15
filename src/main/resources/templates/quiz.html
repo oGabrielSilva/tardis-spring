@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <th:block th:replace="~{includes/quiz-head.html}"></th:block>
+  <link rel="stylesheet" href="/public/css/quiz.css">
+  <title>Tardis - Crie seu próprio quiz e compartilhe com seus amigos!</title>
+</head>
+
+<body>
+  <div>
+    <th:block th:replace="~{includes/quiz-header.html}"></th:block>
+    <section id="new-quiz">
+      <div class="c">
+        <h1>Crie seu quiz</h1>
+        <p>
+          Crie qualquer tipo de teste usando nossa plataforma
+        </p>
+        <form id="form-n-quiz">
+          <div class="quiz-image">
+            <button data-message="Você precisa adicionar uma imagem ao seu quiz" type="button" id="btn-add-f-img">
+              <i class="bi bi-card-image"></i>
+              <span>
+                Adicione uma imagem de capa
+              </span>
+            </button>
+            <img title="Clique para trocar a imagem" id="image-preview" class="dn" role="button"
+              src="/public/images/add-img.jpg" alt="Ícone do quiz">
+            <input data-message="Imagem selecionada é muito pesada" type="file" class="dn" name="icon"
+              id="quiz-icon-selector" accept=".jpg, .jpeg, .webp, .png" />
+          </div>
+          <div>
+            <label for="title">Título do seu quiz</label>
+            <input data-message="Mínimo de 5 caracteres em seu título"
+              placeholder="Exemplo: Consegue Nomear Todos Esses Vilões de One Piece?" class="variant" type="text"
+              name="title" id="title" autocomplete="off" autocapitalize="off" maxlength="200">
+          </div>
+          <div>
+            <label for="description">Descrição</label>
+            <textarea placeholder="A descrição é fundamental no seu quiz. Aqui você deve convencer as pessoas a jogar"
+              class="variant" name="description" id="description" autocomplete="off" autocapitalize="off"
+              maxlength="350"></textarea>
+            <div>
+              <small id="description-len">350</small>
+            </div>
+          </div>
+          <div>
+            <label for="keywords">Palavras-chave</label>
+            <input data-message="Mínimo de 1 palavra-chave"
+              placeholder="Adicione palavras-chave para que seu quiz possa ser encontrado através das buscas"
+              class="variant" type="text" name="keywords" id="keywords" autocomplete="off" autocapitalize="off"
+              maxlength="200">
+            <small>
+              Separe as palavras-chave por vírgulas ou espaços em branco. <strong>Exemplo</strong>: use
+              "<strong>one_piece</strong>"
+              no lugara de
+              "one piece"
+            </small>
+            <div id="preview-keywords">
+            </div>
+          </div>
+          <div>
+            <button class="primary" type="submit">Criar quiz</button>
+          </div>
+        </form>
+        <p>
+          <small>
+            Todos os quizzes terão um ranking com os 100 melhores
+            jogadores.
+            Faça um quiz sobre você mesmo e veja qual dos seus amigos te conhece melhor. Ou então, crie um sobre uma
+            celebridade — o céu é o limite
+          </small>
+        </p>
+      </div>
+    </section>
+  </div>
+  <input type="hidden" id="www-manager-id" value="quiz-create">
+</body>
+
+</html>

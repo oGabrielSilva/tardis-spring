@@ -8,6 +8,8 @@ interface Theme {
 }
 
 export class ToasterTool {
+  private static tool: ToasterTool;
+
   private readonly anim;
   private readonly events: Array<number> = [];
   private readonly toasterID = 'toaster';
@@ -116,7 +118,7 @@ export class ToasterTool {
     );
   }
 
-  private async hide() {
+  public async hide() {
     return new Promise((r) => {
       try {
         this.events.forEach((e) => clearTimeout(e));
@@ -140,34 +142,34 @@ export class ToasterTool {
     return this;
   }
 
-  public info(message: string, timerInMilliseconds = 6000) {
+  public info(message?: string, timerInMilliseconds = 6000) {
     this.updateStyle(timerInMilliseconds);
     this.updateTheme(this.themes.info);
-    this.toasterText!.textContent = message;
+    this.toasterText!.textContent = message ? message : '';
     this.show(timerInMilliseconds);
     this.events.push(setTimeout(() => this.hide(), timerInMilliseconds));
   }
 
-  public alert(message: string, timerInMilliseconds = 6000) {
+  public alert(message?: string, timerInMilliseconds = 6000) {
     this.updateStyle(timerInMilliseconds);
     this.updateTheme(this.themes.alert);
-    this.toasterText!.textContent = message;
+    this.toasterText!.textContent = message ? message : '';
     this.show(timerInMilliseconds);
     this.events.push(setTimeout(() => this.hide(), timerInMilliseconds));
   }
 
-  public success(message: string, timerInMilliseconds = 6000) {
+  public success(message?: string, timerInMilliseconds = 6000) {
     this.updateStyle(timerInMilliseconds);
     this.updateTheme(this.themes.success);
-    this.toasterText!.textContent = message;
+    this.toasterText!.textContent = message ? message : '';
     this.show(timerInMilliseconds);
     this.events.push(setTimeout(() => this.hide(), timerInMilliseconds));
   }
 
-  public danger(message: string, timerInMilliseconds = 6000) {
+  public danger(message?: string, timerInMilliseconds = 6000) {
     this.updateStyle(timerInMilliseconds);
     this.updateTheme(this.themes.danger);
-    this.toasterText!.textContent = message;
+    this.toasterText!.textContent = message ? message : '';
     this.show(timerInMilliseconds);
     this.events.push(setTimeout(() => this.hide(), timerInMilliseconds));
   }
@@ -176,9 +178,12 @@ export class ToasterTool {
     return this.anim;
   }
 
-  public static create(animation: AnimationTool) {
-    const t = new ToasterTool(animation);
-    t.generate();
-    return t;
+  public static get(anim?: AnimationTool) {
+    if (!ToasterTool.tool) {
+      if (!anim) anim = AnimationTool.get();
+      ToasterTool.tool = new ToasterTool(anim);
+      ToasterTool.tool.generate();
+    }
+    return ToasterTool.tool;
   }
 }

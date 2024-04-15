@@ -1,5 +1,6 @@
 export class UserValidation {
   private readonly emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  private readonly usernameRegex = /[^a-zA-Z0-9\-_.]/g;
 
   public isEmailValid(email: string) {
     return typeof email === 'string' && this.emailRegex.test(email);
@@ -15,5 +16,9 @@ export class UserValidation {
 
   public isUsernameValid(username: string) {
     return typeof username === 'string' && username.length >= 1;
+  }
+
+  public normalizeUsername(username: string) {
+    return username.trim().replace(this.usernameRegex, '');
   }
 }

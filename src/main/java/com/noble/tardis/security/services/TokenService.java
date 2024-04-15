@@ -32,7 +32,7 @@ public class TokenService {
         try {
             return JWT.create().withIssuer(issuer).withAudience(audience).withSubject(user.getEmail())
                     .withClaim("authorities", user.getAllUserRoles())
-                    .withExpiresAt(LocalDateTime.now().plusHours(42).toInstant(ZoneOffset.UTC)).sign(algorithm);
+                    .withExpiresAt(LocalDateTime.now().plusDays(7).toInstant(ZoneOffset.UTC)).sign(algorithm);
         } catch (JWTCreationException ex) {
             return "";
         }
@@ -60,7 +60,9 @@ public class TokenService {
             var cookies = req.getCookies();
             if (cookies == null || cookies.length < 1)
                 return authorization;
-            var op = Stream.of(cookies).filter(c -> c.getName().equals("Authorization")).findFirst();
+            var op = Stream.of(cookies).filter(c -> {
+                return c.getName().equals("Authorization");
+            }).findFirst();
             if (op.isPresent()) {
                 authorization = op.get().getValue();
             } else

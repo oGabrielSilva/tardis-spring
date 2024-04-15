@@ -7,23 +7,26 @@ interface HTML {
   htmlType: string;
   attributes?: Array<Attr>;
   children?: Array<HTML>;
-  onClick?: () => void;
+  value?: string;
+  // eslint-disable-next-line no-unused-vars
+  onClick?: (target: HTMLElement) => void;
 }
 
-function generate({ htmlType, attributes, onClick, children }: HTML) {
+function generate({ htmlType, attributes, value, onClick, children }: HTML) {
   const html = document.createElement(htmlType);
   if (attributes) attributes.forEach((attr) => html.setAttribute(attr.key, attr.value));
-  if (onClick) html.onclick = onClick;
+  if (onClick) html.onclick = () => onClick(html);
   if (children) {
     children.forEach((child) => {
       const c = generate(child);
       html.appendChild(c);
     });
   }
+  if (value) html.textContent = value;
   return html;
 }
 
-export function generateHTML<T>({ attributes, htmlType, onClick, children }: HTML) {
+export function generateHTML<T>({ attributes, value, htmlType, onClick, children }: HTML) {
   const html = generate({ htmlType, attributes, onClick });
   if (children) {
     children.forEach((child) => {
@@ -31,5 +34,6 @@ export function generateHTML<T>({ attributes, htmlType, onClick, children }: HTM
       html.appendChild(c);
     });
   }
+  if (value) html.textContent = value;
   return html as T;
 }

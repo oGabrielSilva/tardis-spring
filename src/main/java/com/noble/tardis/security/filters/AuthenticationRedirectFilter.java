@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -11,7 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-// @Component
+@Component
 public class AuthenticationRedirectFilter extends OncePerRequestFilter {
 
     @Override
@@ -19,7 +20,7 @@ public class AuthenticationRedirectFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         boolean isAuthenticated = auth != null && auth.isAuthenticated()
-                && !(auth instanceof AnonymousAuthenticationToken);
+                && !(auth.getPrincipal() instanceof AnonymousAuthenticationToken);
 
         if (!isAuthenticated) {
             response.sendRedirect("/session");

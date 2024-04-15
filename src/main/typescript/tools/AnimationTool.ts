@@ -1,5 +1,9 @@
 export class AnimationTool {
+  private static anim: AnimationTool;
+
   private readonly shakeClass = 'animated-by-shake';
+
+  private constructor() {}
 
   public scaleIn(element: HTMLElement, onComplete?: () => void) {
     element.style.scale = '1.1';
@@ -26,5 +30,12 @@ export class AnimationTool {
       element.classList.add(this.shakeClass);
       setTimeout(() => element.classList.remove(this.shakeClass), timer);
     }, 100);
+  }
+
+  public static get() {
+    if (!AnimationTool.anim) {
+      AnimationTool.anim = new AnimationTool();
+    }
+    return AnimationTool.anim;
   }
 }

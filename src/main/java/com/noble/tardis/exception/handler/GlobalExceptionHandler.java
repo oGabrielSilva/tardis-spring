@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.noble.tardis.exception.BadRequest;
@@ -20,6 +21,7 @@ import com.noble.tardis.exception.dto.ExceptionResponseDto;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+@RestController
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -27,7 +29,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ExceptionResponseDto> generic(HttpServletRequest request, Exception ex) {
                 System.out.println(Instant.now());
-                System.err.println(ex.getMessage());
+                System.err.println("* Default exception handler: " + ex.getMessage() + "\n");
+                ex.printStackTrace();
                 return new ResponseEntity<>(new ExceptionResponseDto(LocalDateTime.now().toInstant(ZoneOffset.UTC),
                                 "Unexpected exception", request.getRequestURL().toString(),
                                 HttpStatus.INTERNAL_SERVER_ERROR.value()),
@@ -79,4 +82,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                 ex.getMessage(), request.getRequestURL().toString(), HttpStatus.UNAUTHORIZED.value()),
                                 HttpStatus.UNAUTHORIZED);
         }
+
 }

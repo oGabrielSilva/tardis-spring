@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <th:block th:replace="~{includes/quiz-head.html}"></th:block>
+  <link rel="stylesheet" href="/public/css/quiz.css">
+  <title th:text="${quiz.title + ' - Edição'}"></title>
+</head>
+
+<body>
+  <div>
+    <th:block th:replace="~{includes/quiz-header.html}"></th:block>
+    <section id="new-quiz">
+      <div class="c">
+        <h1 th:text="${quiz.title}" id="quiz-title"></h1>
+        <p>
+          Edite seu quiz. Adicione ou remova as perguntas
+        </p>
+        <form autocomplete="off" id="form-e-quiz">
+          <div id="quiz-slug" class="dn" th:data-value="${quiz.slug}"></div>
+          <div class="quiz-image">
+            <img title="Clique para trocar a imagem" id="image-preview" role="button" th:src="${quiz.imageURL}"
+              th:alt="${quiz.title}">
+            <input data-message="Imagem selecionada é muito pesada" type="file" class="dn" name="icon"
+              id="quiz-icon-selector" accept=".jpg, .jpeg, .webp, .png" />
+          </div>
+          <div>
+            <label for="title">Título do seu quiz</label>
+            <input th:value="${quiz.title}" data-message="Mínimo de 5 caracteres em seu título"
+              placeholder="Exemplo: Consegue Nomear Todos Esses Vilões de One Piece?" class="variant" type="text"
+              name="title" id="title" autocomplete="off" autocapitalize="off" maxlength="200">
+          </div>
+          <div>
+            <label for="description">Descrição</label>
+            <textarea th:text="${quiz.description}"
+              placeholder="A descrição é fundamental no seu quiz. Aqui você deve convencer as pessoas a jogar"
+              class="variant" name="description" id="description" autocomplete="off" autocapitalize="off"
+              maxlength="350"></textarea>
+            <div>
+              <small id="description-len">350</small>
+            </div>
+          </div>
+          <div>
+            <label for="keywords">Palavras-chave</label>
+            <input th:value="${keywords}" data-message="Mínimo de 1 palavra-chave"
+              placeholder="Adicione palavras-chave para que seu quiz possa ser encontrado através das buscas"
+              class="variant" type="text" name="keywords" id="keywords" autocomplete="off" autocapitalize="off"
+              maxlength="200">
+            <small>
+              Separe as palavras-chave por vírgulas ou espaços em branco. <strong>Exemplo</strong>: use
+              "<strong>one_piece</strong>"
+              no lugara de
+              "one piece"
+            </small>
+            <div id="preview-keywords"></div>
+          </div>
+          <div>
+            <div id="preview-quests" data-delete="Apagar pergunta? Clique novamente" data-delete-success="Deletado!">
+              <h3><span>Perguntas</span></h3>
+              <small id="preview-small-quest-alert" th:class="${quests.size() < 5 ? '' : 'dn'}"
+                style="color: var(--danger-light);">
+                Seu quiz não possui perguntas suficientes (5 ou mais)
+              </small>
+              <div class="items">
+                <div class="preview-item" th:each="quest, i : ${quests}" th:data-id="${quest.id}">
+                  <span th:text="${i.index + 1} + '.'"></span>
+                  <span class="quest-title" th:text="${quest.quest}" style="color: var(--title);"></span>
+                  <div class="buttons">
+                    <button class="view" type="button" th:data-id="${quest.id}">
+                      <i class="bi bi-eye"></i>
+                    </button>
+                    <button class="delete" type="button" th:data-id="${quest.id}">
+                      <i class="bi bi-trash3" style="color: var(--danger-light)"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <span id="no-quest-alert" th:class="${quests.size() < 1 ? '' : 'dn'}"
+                style="color: var(--danger-light);">Não há perguntas
+                cadastradas</span>
+            </div>
+            <button type="button" id="button-add-new-quest">
+              <i class="bi bi-chevron-right"></i>
+              <span>Adicionar nova pergunta</span>
+            </button>
+            <small>Ao clicar em "Adicionar nova pergunta", irá abrir uma nova janela</small>
+          </div>
+          <div>
+            <button class="primary" type="submit">Salvar</button>
+          </div>
+        </form>
+        <div id="add-quest-modal" class="modal out-right" style="display: none;">
+          <button type="button" id="hide-form-add-quest">
+            <i class="bi bi-x-lg"></i>
+          </button>
+          <form autocomplete="off" class="modal-content form-add-quest" id="form-quest"
+            data-success="Nova pergunta adicionada ao quiz">
+            <div>
+              <img role="button" id="quest-image-preview" src="/public/images/add-img.jpg"
+                data-default-src="/public/images/add-img.jpg" alt="Adicione uma imagem a pergunta">
+              <input data-message="Imagem selecionada é muito pesada" class="dn" type="file" name="image"
+                id="quest-image-input" accept=".jpg, .jpeg, .png, .webp, .gif">
+            </div>
+            <div>
+              <textarea style="font-size: 1em;" maxlength="150" type="text" name="quest" class="basic" id="quest-quest"
+                placeholder="Qual a sua pergunta?"
+                data-message="A pergunta precisa ter um tamanho entre 5 e 150 caracteres"></textarea>
+            </div>
+            <div class="alternatives">
+              <h3>Alternativas</h3>
+              <div class="alternative">
+                <label for="alternative-a">Alternativa correta</label>
+                <input data-message="A alternativa correta precisa existir" placeholder="Alternativa correta"
+                  class="variant" type="text" id="alternative-a">
+              </div>
+
+              <div class="alternative">
+                <label for="alternative-b">Alternativa errada</label>
+                <input data-message="Precisa existir ao menos duas alternativas" placeholder="Alternativa incorreta"
+                  class="variant" type="text" id="alternative-b">
+              </div>
+
+              <div class="alternative">
+                <label for="alternative-c">Alternativa errada (opcional)</label>
+                <input placeholder="Alternativa incorreta opcional" class="variant" type="text" id="alternative-c">
+              </div>
+
+              <div class="alternative">
+                <label for="alternative-d">Alternativa errada (opcional)</label>
+                <input placeholder="Alternativa incorreta opcional" class="variant" type="text" id="alternative-d">
+              </div>
+
+              <div class="alternative">
+                <label for="alternative-e">Alternativa errada (opcional)</label>
+                <input placeholder="Alternativa incorreta opcional" class="variant" type="text" id="alternative-e">
+              </div>
+            </div>
+            <div class="buttons">
+              <button class="danger" type="button">Cancelar</button>
+              <button class="primary" type="submit">Adicionar</button>
+            </div>
+          </form>
+        </div>
+        <p>
+          <small>
+            Todos os quizzes terão um ranking com os 100 melhores
+            jogadores.
+            Faça um quiz sobre você mesmo e veja qual dos seus amigos te conhece melhor. Ou então, crie um sobre uma
+            celebridade — o céu é o limite
+          </small>
+        </p>
+      </div>
+    </section>
+  </div>
+  <input type="hidden" id="www-manager-id" value="quiz-edit">
+
+  <script th:inline="javascript">
+    const listOfQuests = /*[[${quests}]]*/ null;
+  </script>
+</body>
+
+</html>

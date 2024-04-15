@@ -1,4 +1,8 @@
 export class ImageTool {
+  private static tool: ImageTool;
+
+  private constructor() {}
+
   public imageToBlob(file: File, width = 128, height = 128, resize = true) {
     return new Promise<Blob | null>((resolve) => {
       try {
@@ -38,7 +42,8 @@ export class ImageTool {
     });
   }
 
-  public imageToBlobWhithoutResize(file: File) {
+  public imageToBlobWhithoutResize(file: File, quality = 0.85) {
+    if (quality > 1 || quality < 0) quality = 1;
     return new Promise<Blob | null>((resolve) => {
       try {
         if (!file) return resolve(null);
@@ -59,7 +64,7 @@ export class ImageTool {
               resolve(b);
             },
             'image/jpeg',
-            0.85,
+            quality,
           );
         };
         img.crossOrigin = 'Anonymous';
@@ -94,5 +99,12 @@ export class ImageTool {
       image.onload = () => resolve(image);
       image.src = context.canvas.toDataURL();
     });
+  }
+
+  public static get() {
+    if (!ImageTool.tool) {
+      ImageTool.tool = new ImageTool();
+    }
+    return ImageTool.tool;
   }
 }

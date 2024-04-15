@@ -1,17 +1,23 @@
 <header class="default">
   <div class="child">
-    <h1><a href="/">Tardis</a></h1>
-    <div th:if="${user != null}">
-      <a th:href="'/u/' + ${user.username}">
-        <img class="avatar" width="42" height="42" th:alt="${user.name}"
-          th:src="${user.avatarURL} ?: '/public/svg/avatar.svg'" />
-      </a>
-    </div>
-    <div th:unless="${user != null}">
-      <a href="/session" class="go-session">
-        <i class="bi bi-box-arrow-in-right"></i>
-        Login
-      </a>
+    <h1><a href="/" class="title">Tardis</a></h1>
+    <div id="header-group-buttons">
+      <div id="link-new-quiz">
+        <a class="blank" href="/quiz" target="_blank" rel="noopener noreferrer">Criar quiz</a>
+        <a class="dn" href="/quiz"><i class="bi bi-plus-lg"></i></a>
+      </div>
+      <div th:if="${user != null}">
+        <a th:href="'/u/' + ${user.username}">
+          <img class="avatar" width="42" height="42" th:alt="${user.name}"
+            th:src="${user.avatarURL} ?: '/public/svg/avatar.svg'" />
+        </a>
+      </div>
+      <div th:unless="${user != null}">
+        <a href="/session" class="go-session">
+          <i class="bi bi-box-arrow-in-right"></i>
+          Login
+        </a>
+      </div>
     </div>
   </div>
 </header>

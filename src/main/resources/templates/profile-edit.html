@@ -11,9 +11,9 @@
   <div>
     <th:block th:replace="~{includes/header-default.html}"></th:block>
     <main id="main-edit-profile">
-      <form id="edit-profile">
+      <form id="edit-profile" th:data-auth="${user.email}" data-success="Seus dados foram atualizados com sucesso">
         <div>
-          <h1>Olá, <span th:text="${user.name}"></span></h1>
+          <h1>Olá, <span id="span-user-name" th:text="${user.name}"></span></h1>
           <h3>Edite seu perfil</h3>
         </div>
         <div class="inputs">
@@ -27,7 +27,8 @@
           <div class="form-input">
             <label for="username">Username</label>
             <input th:value="${user.username}" maxlength="150" class="primary" data-message="Username precisa ser único"
-              type="text" name="username" id="username" placeholder="oNoble">
+              data-username-already-registered="Oppss... o username # já está sendo usado por outra pessoa" type="text"
+              name="username" id="username" placeholder="oNoble">
           </div>
 
           <div class="form-input">
@@ -44,10 +45,64 @@
               placeholder="noble@tardis.com">
           </div>
         </div>
+        <div class="modal out-bottom">
+          <div class="modal-content">
+            <h1>Você quer alterar seu email?</h1>
+            <div class="form-input">
+              <label for="password">Confirme sua senha</label>
+              <input maxlength="150" class="primary" data-message="Sua senha precisa ter pelo menos 8 caracteres"
+                type="password" name="password" id="password" placeholder="Mínimo de 8 caracteres">
+            </div>
+            <div class="fg">
+              <a href="/forgot-password" target="_blank" rel="noopener noreferrer">Esqueceu a senha?</a>
+            </div>
+            <div class="buttons">
+              <button type="button" class="danger">Cancelar</button>
+              <button type="button" class="primary">Confirmar</button>
+            </div>
+          </div>
+        </div>
+        <div class="fg">
+          <button id="button-update-password" type="button">Atualizar minha senha</button>
+        </div>
         <div>
           <button type="submit" class="primary">Salvar alterações</button>
         </div>
       </form>
+      <div id="modal-password" class="modal out-left">
+        <form id="form-update-password" data-success="Senha atualizada com sucesso!" class="modal-content">
+          <h1>Você quer atualizar sua senha?</h1>
+          <div>
+
+            <div class="form-input">
+              <label for="c-password">Confirme sua senha atual</label>
+              <input maxlength="150" class="primary" data-message="Sua senha tem pelo menos 8 caracteres"
+                type="password" name="password" id="c-password" placeholder="Mínimo de 8 caracteres">
+            </div>
+
+            <div class="form-input">
+              <label for="n-password">Nova senha</label>
+              <input maxlength="150" class="primary" data-message="Sua nova senha precisa de um mínimo de 8 caracteres"
+                type="password" name="password" id="n-password">
+            </div>
+
+            <div class="form-input">
+              <label for="c-n-password">Confirme a nova senha</label>
+              <input maxlength="150" class="primary" data-message="A senha precisa ser igual. Confirme a nova senha"
+                data-message-equal="A nova senha não pode ser igual a anterior" type="password" name="password"
+                id="c-n-password">
+            </div>
+
+          </div>
+          <div class="fg">
+            <a href="/forgot-password" target="_blank" rel="noopener noreferrer">Esqueceu a senha?</a>
+          </div>
+          <div class="buttons">
+            <button type="button" class="danger">Cancelar</button>
+            <button type="submit" class="primary">Confirmar</button>
+          </div>
+        </form>
+      </div>
     </main>
   </div>
   <input type="hidden" id="www-manager-id" value="profile">

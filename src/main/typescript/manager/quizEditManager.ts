@@ -148,7 +148,7 @@ export function quizEditManager(form: HTMLFormElement) {
 function formAddNewQuestManager() {
   const questPreview = document.getElementById('preview-quests')!;
   const quizSlug = document.getElementById('quiz-slug')!.dataset.value;
-  const addQuestButton = document.querySelector('#button-add-new-quest')!;
+  const addQuestButton = document.querySelector('#button-add-new-quest')! as HTMLButtonElement;
   const questModal = document.getElementById('add-quest-modal')!;
   const formAddQuest = questModal.querySelector('form')!;
   const hideAddQuestModal = [
@@ -171,6 +171,16 @@ function formAddNewQuestManager() {
   addQuestButton.addEventListener('click', () => {
     questModal.style.display = '';
     setTimeout(() => questModal.classList.remove('out-right'), 10);
+  });
+  questModal.addEventListener('click', ({ target }) => {
+    if (
+      (target as HTMLElement).id === questModal.id &&
+      formAddQuest.dataset.updateQuest === 'true'
+    ) {
+      formAddQuest.dataset.updateQuest = 'false';
+      resetAddNewQuestForm();
+      hideAddQuestModal[0].click();
+    }
   });
   hideAddQuestModal.forEach((button) =>
     button.addEventListener('click', () => {
@@ -202,6 +212,16 @@ function formAddNewQuestManager() {
       }
     }, 500);
   });
+
+  function resetAddNewQuestForm() {
+    [alternativeA, alternativeB, alternativeC, alternativeD, alternativeE].forEach(
+      (a) => (a.value = ''),
+    );
+    questImageBlob = null;
+    questImageInput.value = '';
+    questTitle.value = '';
+    questImagePreview.src = questImagePreview.dataset.defaultSrc!;
+  }
 
   const normalizeQuestTitle = () => {
     questTitle.value = validation.normalizeQuestTitle(questTitle.value);
@@ -271,15 +291,7 @@ function formAddNewQuestManager() {
       console.log(error);
     } finally {
       progress.hide();
-      if (!error) {
-        [alternativeA, alternativeB, alternativeC, alternativeD, alternativeE].forEach(
-          (a) => (a.value = ''),
-        );
-        questImageBlob = null;
-        questImageInput.value = '';
-        questTitle.value = '';
-        questImagePreview.src = questImagePreview.dataset.defaultSrc!;
-      }
+      if (!error) resetAddNewQuestForm();
     }
   });
 
@@ -290,6 +302,9 @@ function formAddNewQuestManager() {
     const id = Number(item.dataset.id);
     const quest = quests.find((q) => q.id === id);
     if (!quest) return console.log('Quest error: ' + id);
+    item.addEventListener('click', ({ target }) =>
+      onPreviewItemClick(quest, target as HTMLElement),
+    );
     const deleteButton = item.querySelector<HTMLButtonElement>('button.delete')!;
     deleteButton.onclick = () => onDelete(deleteButton, quest);
   });
@@ -344,6 +359,7 @@ function formAddNewQuestManager() {
         generateHTML<HTMLDivElement>({
           htmlType: 'div',
           attributes: [{ key: 'class', value: 'preview-item' }],
+          onClick: (t) => onPreviewItemClick(q, t),
           children: [
             {
               htmlType: 'span',
@@ -364,10 +380,12 @@ function formAddNewQuestManager() {
                 {
                   htmlType: 'button',
                   onClick: () => {},
-                  children: [{ htmlType: 'i', attributes: [{ key: 'class', value: 'bi bi-eye' }] }],
+                  children: [
+                    { htmlType: 'i', attributes: [{ key: 'class', value: 'bi bi-pencil-square' }] },
+                  ],
                   attributes: [
                     { key: 'type', value: 'button' },
-                    { key: 'class', value: 'view' },
+                    { key: 'class', value: 'quest-edit' },
                     { key: 'data-id', value: q.id.toString() },
                   ],
                 },
@@ -411,5 +429,27 @@ function formAddNewQuestManager() {
     alert.classList.remove('dn');
     alert.scrollIntoView();
     setTimeout(() => anim.shake(alert), 500);
+  }
+
+  function onPreviewItemClick(q: QuestDto, target: HTMLElement): void {
+    if (
+      target.nodeName.toLocaleLowerCase() === 'i' &&
+      target.parentElement?.classList.contains('delete')
+    ) {
+      return;
+    }
+    resetAddNewQuestForm();
+    alternativeA.value = q.a;
+    alternativeB.value = q.b;
+    alternativeC.value = q.c;
+    alternativeD.value = q.d;
+    alternativeE.value = q.e;
+
+    questTitle.value = q.quest;
+    questImagePreview.src = q.imageURL.startsWith('https://')
+      ? q.imageURL
+      : questImagePreview.dataset.defaultSrc!;
+    formAddQuest.dataset.updateQuest = 'true';
+    addQuestButton.click();
   }
 }
